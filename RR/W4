@@ -1,0 +1,27 @@
+import sqlite3
+import pandas as pd
+
+# 1. Koneksi ke database
+conn = sqlite3.connect("geofisika.db")  # pastikan ekstensi .db, bukan simbol aneh
+cursor = conn.cursor()
+
+# 2. Request data
+query = """
+SELECT 
+    s.nama_survey,
+    s.lokasi,
+    d.titik_x,
+    d.titik_y,
+    d.amplitudo,
+    d.waktu_tiba
+FROM data_seismik d
+JOIN survey s ON d.id_survey = s.id_survey;
+"""
+
+df = pd.read_sql_query(query, conn)
+
+# 3. Tutup koneksi
+conn.close()
+
+# 4. Lihat hasil
+df.head()

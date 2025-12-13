@@ -1,10 +1,25 @@
-def hitung_total(harga, jumlah, diskon=0):
-    total = harga * jumlah
-    total -= total * (diskon / 100)
-    return total
+# Import pustaka yang diperlukan
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 
-harga = int(input("Masukkan harga barang: "))
-jumlah = int(input("Masukkan jumlah barang: "))
-diskon = int(input("Masukkan diskon (%): "))
+# 1. Buat DataFrame langsung dari data sample
+data = pd.DataFrame({
+    'X (m)': [0, 0, 50, 50, 100, 100],
+    'Y (m)': [0, 50, 0, 50, 0, 50],
+    'Total_Field (nT)': [43210, 43280, 43100, 43420, 43050, 43500]
+})
 
-print("Total belanja =", hitung_total(harga, jumlah, diskon))
+# 2. Ubah data menjadi grid untuk visualisasi kontur
+pivot = data.pivot_table(index='Y (m)', columns='X (m)', values='Total_Field (nT)')
+X, Y = np.meshgrid(pivot.columns, pivot.index)
+Z = pivot.values
+
+# 3. Plot kontur peta anomali magnetik
+plt.figure(figsize=(6, 5))
+cont = plt.contourf(X, Y, Z, cmap='coolwarm', levels=15)
+plt.colorbar(cont, label='Total Field (nT)')
+plt.xlabel('X (m)')
+plt.ylabel('Y (m)')
+plt.title('Peta Anomali Medan Magnetik (Data Sederhana)')
+plt.show()
